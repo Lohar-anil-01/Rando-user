@@ -137,8 +137,4 @@ Contains the styling system:
 - Utilizes CSS radial-gradients and backdrop-filters to achieve a premium UI aesthetic.
 - Employs fluid keyframe-based animations (`fadeIn`, `pulse-glow`, `shimmer`, `spin`).
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+----
