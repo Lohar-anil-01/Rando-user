@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Search, RefreshCw, Users, HelpCircle, Activity, Globe } from "lucide-react";
+import {
+  Search,
+  RefreshCw,
+  Users,
+  HelpCircle,
+  Activity,
+  Globe,
+} from "lucide-react";
 import Card from "./components/Card.jsx";
 import "./App.css";
 
@@ -39,7 +46,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
-  
+
   // Search and Filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [genderFilter, setGenderFilter] = useState("all");
@@ -53,11 +60,13 @@ function App() {
 
       const response = await fetch(
         "https://api.freeapi.app/api/v1/public/randomusers",
-        { signal }
+        { signal },
       );
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
@@ -76,7 +85,7 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController();
-    
+
     Promise.resolve().then(() => {
       loadRandom(controller.signal);
     });
@@ -96,15 +105,22 @@ function App() {
   };
 
   // Get dynamic unique nationalities list for dropdown
-  const uniqueNationalities = [...new Set(posts.map((p) => p.nat))].filter(Boolean).sort();
+  const uniqueNationalities = [...new Set(posts.map((p) => p.nat))]
+    .filter(Boolean)
+    .sort();
 
   // Statistics calculation based on total fetched users
   const totalUsersCount = posts.length;
   const avgAge = totalUsersCount
-    ? Math.round(posts.reduce((sum, p) => sum + p.dob?.age, 0) / totalUsersCount)
+    ? Math.round(
+        posts.reduce((sum, p) => sum + p.dob?.age, 0) / totalUsersCount,
+      )
     : 0;
   const femaleRatio = totalUsersCount
-    ? Math.round((posts.filter((p) => p.gender === "female").length / totalUsersCount) * 100)
+    ? Math.round(
+        (posts.filter((p) => p.gender === "female").length / totalUsersCount) *
+          100,
+      )
     : 0;
 
   const getMostCommonNat = () => {
@@ -143,10 +159,12 @@ function App() {
         email.includes(searchQuery.toLowerCase());
 
       const matchesGender =
-        genderFilter === "all" || (post.gender && post.gender.toLowerCase() === genderFilter);
+        genderFilter === "all" ||
+        (post.gender && post.gender.toLowerCase() === genderFilter);
 
       const matchesNat =
-        natFilter === "all" || (post.nat && post.nat.toLowerCase() === natFilter.toLowerCase());
+        natFilter === "all" ||
+        (post.nat && post.nat.toLowerCase() === natFilter.toLowerCase());
 
       return matchesSearch && matchesGender && matchesNat;
     })
@@ -154,13 +172,17 @@ function App() {
       if (sortBy === "age-asc") return (a.dob?.age || 0) - (b.dob?.age || 0);
       if (sortBy === "age-desc") return (b.dob?.age || 0) - (a.dob?.age || 0);
       if (sortBy === "name-asc") {
-        const nameA = `${a.name?.first || ""} ${a.name?.last || ""}`.toLowerCase();
-        const nameB = `${b.name?.first || ""} ${b.name?.last || ""}`.toLowerCase();
+        const nameA =
+          `${a.name?.first || ""} ${a.name?.last || ""}`.toLowerCase();
+        const nameB =
+          `${b.name?.first || ""} ${b.name?.last || ""}`.toLowerCase();
         return nameA.localeCompare(nameB);
       }
       if (sortBy === "name-desc") {
-        const nameA = `${a.name?.first || ""} ${a.name?.last || ""}`.toLowerCase();
-        const nameB = `${b.name?.first || ""} ${b.name?.last || ""}`.toLowerCase();
+        const nameA =
+          `${a.name?.first || ""} ${a.name?.last || ""}`.toLowerCase();
+        const nameB =
+          `${b.name?.first || ""} ${b.name?.last || ""}`.toLowerCase();
         return nameB.localeCompare(nameA);
       }
       return 0;
@@ -172,7 +194,10 @@ function App() {
       <header className="app-header">
         <div className="brand-section">
           <h1>UserSphere</h1>
-          <p>Explore, manage, and discover random user profiles with dynamic insights.</p>
+          <p>
+            Explore, manage, and discover random user profiles with dynamic
+            insights.
+          </p>
         </div>
         <button
           className={`btn-refresh ${status === "loading" ? "loading" : ""}`}
@@ -193,7 +218,9 @@ function App() {
           </div>
           <div className="stat-details">
             <span className="stat-label">Total Pool</span>
-            <span className="stat-value">{status === "loading" ? "..." : totalUsersCount}</span>
+            <span className="stat-value">
+              {status === "loading" ? "..." : totalUsersCount}
+            </span>
           </div>
         </div>
         <div className="stat-card">
@@ -202,7 +229,9 @@ function App() {
           </div>
           <div className="stat-details">
             <span className="stat-label">Avg. Age</span>
-            <span className="stat-value">{status === "loading" ? "..." : `${avgAge} yrs`}</span>
+            <span className="stat-value">
+              {status === "loading" ? "..." : `${avgAge} yrs`}
+            </span>
           </div>
         </div>
         <div className="stat-card">
@@ -212,7 +241,9 @@ function App() {
           <div className="stat-details">
             <span className="stat-label">Gender Split</span>
             <span className="stat-value">
-              {status === "loading" ? "..." : `${100 - femaleRatio}% M / ${femaleRatio}% F`}
+              {status === "loading"
+                ? "..."
+                : `${100 - femaleRatio}% M / ${femaleRatio}% F`}
             </span>
           </div>
         </div>
@@ -222,7 +253,9 @@ function App() {
           </div>
           <div className="stat-details">
             <span className="stat-label">Top Nat.</span>
-            <span className="stat-value">{status === "loading" ? "..." : commonNat}</span>
+            <span className="stat-value">
+              {status === "loading" ? "..." : commonNat}
+            </span>
           </div>
         </div>
       </section>
@@ -309,13 +342,18 @@ function App() {
               <Search />
             </div>
             <h2>No Users Found</h2>
-            <p>Your search filters didn't match any profiles. Try resetting the filters or fetching fresh users.</p>
+            <p>
+              Your search filters didn't match any profiles. Try resetting the
+              filters or fetching fresh users.
+            </p>
             <button className="btn-reset" onClick={handleResetFilters}>
               Reset Filters
             </button>
           </div>
         ) : (
-          filteredPosts.map((post) => <Card {...post} key={post.login?.uuid || post.id} />)
+          filteredPosts.map((post) => (
+            <Card {...post} key={post.login?.uuid || post.id} />
+          ))
         )}
       </main>
 
